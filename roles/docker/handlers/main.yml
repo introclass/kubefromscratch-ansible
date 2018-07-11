@@ -1,0 +1,4 @@
+- name: start docker
+  service:
+     name: docker
+     stated: started

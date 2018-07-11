@@ -1,0 +1,27 @@
+- name: apiserver client user certs directory
+  tags: cert
+  file:
+    path: "{{ apiserver_client_certs_user }}/{{ item.key }}"
+    state: directory
+  with_dict: "{{ users }}"
+
+- name: apiserver client user key
+  tags: cert
+  openssl_privatekey:
+    path: "{{ apiserver_client_certs_user }}/{{ item.key }}/key.pem"
+  with_dict: "{{ users }}"
+
+- name: apiserver client user csr
+  tags: cert
+  openssl_csr:
+    path: "{{ apiserver_client_certs_user }}/{{ item.key }}/cert.csr"
+    privatekey_path: "{{ apiserver_client_certs_user }}/{{ item.key }}/key.pem"
+    common_name: "{{ item.value.name }}"
+    organization_name: "{{ item.value.org }}"
+  with_dict: "{{ users }}"
+
+# this task will always generate new certs to cover previous certs
+- name: apiserver client user cert
+  tags: cert
+  shell: if [ -f {{ apiserver_client_certs_user }}/{{ item.key }}/cert.pem ];then exit;else  openssl x509 -req -days 365 -in {{ apiserver_client_certs_user }}/{{ item.key }}/cert.csr -CA {{ ca_path }}/ca.pem  -CAkey {{ ca_path }}/key.pem -CAcreateserial -out {{ apiserver_client_certs_user }}/{{ item.key }}/cert.pem;fi
+  with_dict: "{{ users }}"

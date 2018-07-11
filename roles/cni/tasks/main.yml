@@ -1,0 +1,21 @@
+- name: create directory
+  file:
+    path: "{{ cni_install_path }}/{{ item }}"
+    state: directory
+  with_items:      
+    - 'bin'
+    - 'conf'
+
+- name: upload cni
+  copy:
+    src: "{{ item }}"
+    dest: "{{ cni_install_path }}/bin/"
+    mode: u=rwx
+  with_items:
+    - "{{ build_path }}/build-cni/cni/bin/"
+    - "{{ build_path }}/build-cni-plugins/cni-plugins/bin/"
+
+- name: upload cni conf
+  template:
+    src: 10-kuberouter.conf.j2
+    dest: "{{ cni_install_path }}/conf/10-kuberouter.conf"

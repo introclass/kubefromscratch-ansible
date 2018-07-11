@@ -1,0 +1,37 @@
+- name: kubelet certs directory
+  tags: cert
+  file:
+    path: "{{ kubelet_certs_path }}/{{ item }}"
+    state: directory
+  with_items:      
+    - "{{ groups['kubelet'] }}"
+
+- name: kubelet key
+  tags: cert
+  openssl_privatekey:
+    path: "{{ kubelet_certs_path }}/{{ item }}/key.pem"
+  with_items:      
+    - "{{ groups['kubelet'] }}"
+
+- name: kubelet csr
+  tags: cert
+  openssl_csr:
+    path: "{{ kubelet_certs_path }}/{{ item }}/cert.csr"
+    privatekey_path: "{{ kubelet_certs_path }}/{{ item }}/key.pem"
+    common_name: "{{ item }}"
+  with_items:      
+    - "{{ groups['kubelet'] }}"
+
+- name: kubelet req extensions  
+  template:
+    src: extention.conf.j2
+    dest: "{{ kubelet_certs_path }}/{{ item }}/extention.conf"
+  with_items:      
+    - "{{ groups['kubelet'] }}"
+
+# this task will always generate new certs to cover previous certs
+- name: kubelet cert
+  tags: cert
+  shell: if [ -f {{ kubelet_certs_path }}/{{ item }}/cert.pem ];then exit; else  openssl x509 -req -days 365 -in {{ kubelet_certs_path }}/{{ item }}/cert.csr -CA {{ ca_path }}/ca.pem  -CAkey {{ ca_path }}/key.pem -CAcreateserial -out {{ kubelet_certs_path }}/{{ item }}/cert.pem -extensions v3_ca -extfile {{ kubelet_certs_path }}/{{ item }}/extention.conf; fi
+  with_items:      
+    - "{{ groups['kubelet'] }}"

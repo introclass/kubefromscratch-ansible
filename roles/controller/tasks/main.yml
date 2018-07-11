@@ -1,0 +1,65 @@
+- name: create directory
+  file:
+    path: "{{ controller_install_path }}/{{ item }}"
+    state: directory
+  with_items:      
+    - 'bin'
+    - 'cert'
+    - 'data'
+    - 'log'
+
+- name: upload config
+  notify: restart controller
+  template: 
+    src: supervisord.conf.j2
+    dest: "{{ controller_install_path }}/supervisord.conf"
+
+- name: upload config
+  notify: restart controller
+  template: 
+    src: kubeconfig.yml.j2
+    dest: "{{ controller_install_path }}/kubeconfig.yml"
+
+- name: upload controller
+  notify: restart controller
+  copy: 
+    src: "{{ item }}"
+    dest: "{{ controller_install_path }}/bin/"
+    mode: u=rwx
+  with_items:
+    - "{{ build_path }}/build-kubernetes/kubernetes/_output/local/bin/linux/amd64/kube-controller-manager"
+
+- name: upload certs ca
+  notify: restart controller
+  copy:
+    src: "{{ item }}"
+    dest: "{{ controller_install_path }}/cert/ca/"
+  with_items:
+    - "{{ ca_path }}/ca.pem"
+
+- name: upload serviceAccount ca
+  notify: restart controller
+  copy:
+    src: "{{ item }}"
+    dest: "{{ controller_install_path }}/cert/service_account/"
+  with_items:
+    - "{{ serviceAccount_path }}/ca.pem"
+    - "{{ serviceAccount_path }}/key.pem"
+
+- name: upload apiserver client certs 
+  notify: restart controller
+  copy:
+    src: "{{ item }}"
+    dest: "{{ controller_install_path }}/cert/apiserver-client/"
+  with_items:
+    - "{{ apiserver_client_certs_controller }}/{{ inventory_hostname }}/cert.pem"
+    - "{{ apiserver_client_certs_controller }}/{{ inventory_hostname }}/key.pem"
+
+- name: upload scripts
+  copy:
+    src: "{{ item }}"
+    dest: "{{ controller_install_path }}/"
+    mode: u=rwx
+  with_items:
+    - start.sh
+    - stop.sh

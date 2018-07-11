@@ -1,0 +1,61 @@
+[inet_http_server]
+port=127.0.0.1:9002
+username=supervisorctl
+password=supervisorctl
+environment=PATH="%(here)s:$PATH"
+
+[supervisorctl]
+serverurl=http://127.0.0.1:9002
+username=supervisorctl
+password=supervisorctl
+prompt=apiserver-{{ inventory_hostname }}
+
+[supervisord]
+logfile=%(here)s/log/supervisord.log
+logfile_maxbytes=50MB
+logfile_backups=10
+pidfile=/var/run/supervisor/apiserver-{{ inventory_hostname }}.pid
+loglevel=info
+nodaemon=false
+nocleanup=true
+
+[rpcinterface:supervisor]
+supervisor.rpcinterface_factory = supervisor.rpcinterface:make_main_rpcinterface
+
+[program: kube-apiserver]
+command=./bin/kube-apiserver
+	--bind-address=0.0.0.0
+	--service-cluster-ip-range=172.16.0.0/17
+	--log-dir=./log
+	--v=1
+	--etcd-prefix=/kubernetes
+	--etcd-servers=https://{{ groups['etcd'] | zip_longest([], fillvalue=':2379')| map('join') | join(',https://') }}
+	--etcd-cafile=./cert/ca/ca.pem
+	--etcd-certfile=./cert/etcd/cert.pem
+	--etcd-keyfile=./cert/etcd/key.pem
+	--tls-cert-file=./cert/apiserver/cert.pem
+	--tls-private-key-file=./cert/apiserver/key.pem
+	--kubelet-https=true
+	--kubelet-certificate-authority=./cert/ca/ca.pem
+	--kubelet-client-certificate=./cert/kubelet/cert.pem
+	--kubelet-client-key=./cert/kubelet/key.pem
+	--client-ca-file=./cert/ca/ca.pem
+	--secure-port=443
+	--service-account-key-file=./cert/service_account/ca.pem
+	--authorization-mode=RBAC
+	--admission-control=NamespaceLifecycle,NamespaceExists,LimitRanger,SecurityContextDeny,ServiceAccount,ResourceQuota
+#	--runtime-config=/api=true,api/all=true,apis=true,apis/v1=true
+
+numprocs=1
+autostart=true
+startretries=3
+autorestart=unexpected
+exitcodes=0,2
+
+stdout_logfile=./log/apiserver-{{ inventory_hostname }}.stdout
+stdout_logfile_maxbytes=50MB
+stdout_logfile_backups=10
+
+stderr_logfile=./log/apiserver-{{ inventory_hostname }}.stderr
+stderr_logfile_maxbytes=50MB
+stderr_logfile_backups=10

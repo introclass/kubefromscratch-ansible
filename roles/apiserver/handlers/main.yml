@@ -1,0 +1,5 @@
+- name: restart apiserver
+  shell: "./stop.sh && sleep 1 && ./start.sh"
+  args:
+    chdir: "{{ apiserver_install_path }}"
+

@@ -1,0 +1,5 @@
+- name: restart scheduler
+  shell: "./stop.sh && sleep 1 && ./start.sh"
+  args:
+    chdir: "{{ scheduler_install_path }}"
+

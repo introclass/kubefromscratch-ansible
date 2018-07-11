@@ -1,0 +1,32 @@
+- hosts: etcd
+  tasks:
+    - name: start
+      shell: "./start.sh"
+      args:
+        chdir: "{{ etcd_install_path }}"
+- hosts: apiserver
+  tasks:
+    - name: start
+      shell: "./start.sh"
+      args:
+        chdir: "{{ apiserver_install_path }}"
+- hosts: controller
+  tasks:
+    - name: start
+      shell: "./start.sh"
+      args:
+        chdir: "{{ controller_install_path }}"
+- hosts: scheduler
+  tasks:
+    - name: start
+      shell: "./start.sh"
+      args:
+        chdir: "{{ scheduler_install_path }}"
+- hosts: node
+  tasks:
+    - name: start docker
+      shell: "systemctl start docker"
+    - name: start kubelet  
+      shell: "./start.sh"
+      args:
+        chdir: "{{ kubelet_install_path }}"

@@ -1,0 +1,20 @@
+- name: checkout
+  tags: build
+  git:
+      repo: https://github.com/lijiaocn/kubefromscratch.git
+      dest: "{{ build_path }}"
+      version: master
+      force: yes
+
+- name: build component
+  tags: build
+  command: "{{ build_path }}/{{ item }}/build.sh" 
+  args:
+      chdir: "{{ build_path }}/{{ item }}"
+  with_items:
+      - build-cni-plugins
+      - build-cni
+      - build-etcd
+      - build-kube-router  
+      - build-kubernetes
+#     - build-coredns   //something is wrong

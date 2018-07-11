@@ -1,0 +1,71 @@
+- name: create directory
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:      
+    - "{{ etcd_install_path }}/bin/"
+    - "{{ etcd_install_path }}/cert/"
+    - "{{ etcd_install_path }}/data/"
+    - "{{ etcd_install_path }}/log/"
+
+- name: upload etcd
+  notify: restart etcd
+  copy:
+    src: "{{ item }}"
+    dest: "{{ etcd_install_path }}/bin/"
+    mode: u=rwx
+  with_items:
+    - "{{ build_path }}/build-etcd/etcd/bin/etcd"
+    - "{{ build_path }}/build-etcd/etcd/bin/etcdctl"
+
+- name: upload certs ca
+  notify: restart etcd
+  copy:
+    src: "{{ item }}"
+    dest: "{{ etcd_install_path }}/cert/ca/"
+  with_items:
+    - "{{ ca_path }}/ca.pem"
+
+- name: upload client certs 
+  notify: restart etcd
+  copy:
+    src: "{{ item }}"
+    dest: "{{ etcd_install_path }}/cert/client/"
+  with_items:
+    - "{{ etcd_client_certs_path }}/{{ inventory_hostname }}/cert.pem"
+    - "{{ etcd_client_certs_path }}/{{ inventory_hostname }}/key.pem"
+   
+- name: upload server certs
+  notify: restart etcd
+  copy:
+    src: "{{ item }}"
+    dest: "{{ etcd_install_path }}/cert/server/"
+  with_items:
+    - "{{ etcd_server_certs_path }}/{{ inventory_hostname }}/cert.pem"
+    - "{{ etcd_server_certs_path }}/{{ inventory_hostname }}/key.pem"
+
+- name: upload peer certs 
+  notify: restart etcd
+  copy:
+    src: "{{ item }}"
+    dest: "{{ etcd_install_path }}/cert/peer/"
+  with_items:
+    - "{{ etcd_peer_certs_path }}/{{ inventory_hostname }}/cert.pem"
+    - "{{ etcd_peer_certs_path }}/{{ inventory_hostname }}/key.pem"
+
+- name: upload config
+  notify: restart etcd
+  template: 
+    src: supervisord.conf.j2
+    dest: "{{ etcd_install_path }}/supervisord.conf"
+
+- name: upload scripts
+  copy:
+    src: "{{ item }}"
+    dest: "{{ etcd_install_path }}/"
+    mode: u=rwx
+  with_items:
+    - etcdctl2.sh
+    - etcdctl3.sh
+    - start.sh
+    - stop.sh

@@ -1,0 +1,46 @@
+[inet_http_server]
+port=127.0.0.1:9007
+username=supervisorctl
+password=supervisorctl
+environment=PATH="%(here)s:$PATH"
+
+[supervisorctl]
+serverurl=http://127.0.0.1:9007
+username=supervisorctl
+password=supervisorctl
+prompt=kuberouter-{{ inventory_hostname }}
+
+[supervisord]
+logfile=%(here)s/log/supervisord.log
+logfile_maxbytes=50MB
+logfile_backups=10
+pidfile=/var/run/supervisor/kuberouter-{{ inventory_hostname }}.pid
+loglevel=info
+nodaemon=false
+nocleanup=true
+
+[rpcinterface:supervisor]
+supervisor.rpcinterface_factory = supervisor.rpcinterface:make_main_rpcinterface
+
+[program: kube-router]
+command=./bin/kube-router
+	--kubeconfig=./kubeconfig.yml
+	--enable-overlay=true
+	--enable-pod-egress=true
+	--run-firewall=true
+	--run-router=true
+	--run-service-proxy=true
+	--hostname-override={{ inventory_hostname }}
+numprocs=1
+autostart=true
+startretries=3
+autorestart=unexpected
+exitcodes=0,2
+
+stdout_logfile=./log/kuberouter-{{ inventory_hostname }}.stdout
+stdout_logfile_maxbytes=50MB
+stdout_logfile_backups=10
+
+stderr_logfile=./log/kuberouter-{{ inventory_hostname }}.stderr
+stderr_logfile_maxbytes=50MB
+stderr_logfile_backups=10

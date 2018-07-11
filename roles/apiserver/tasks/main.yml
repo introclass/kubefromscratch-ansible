@@ -1,0 +1,77 @@
+- name: create directory
+  file:
+    path: "{{ apiserver_install_path }}/{{ item }}"
+    state: directory
+  with_items:      
+    - 'bin'
+    - 'cert'
+    - 'data'
+    - 'log'
+
+- name: upload apiserver
+  notify: restart apiserver
+  copy: 
+    src: "{{ item }}"
+    dest: "{{ apiserver_install_path }}/bin/"
+    mode: u=rwx
+  with_items:
+    - "{{ build_path }}/build-kubernetes/kubernetes/_output/local/bin/linux/amd64/kube-apiserver"
+
+- name: upload certs ca
+  notify: restart apiserver
+  copy:
+    src: "{{ item }}"
+    dest: "{{ apiserver_install_path }}/cert/ca/"
+  with_items:
+    - "{{ ca_path }}/ca.pem"
+
+- name: upload serviceAccount ca
+  notify: restart apiserver
+  copy:
+    src: "{{ item }}"
+    dest: "{{ apiserver_install_path }}/cert/service_account/"
+  with_items:
+    - "{{ serviceAccount_path }}/ca.pem"
+    - "{{ serviceAccount_path }}/key.pem"
+
+- name: upload apiserver certs 
+  notify: restart apiserver
+  copy:
+    src: "{{ item }}"
+    dest: "{{ apiserver_install_path }}/cert/apiserver/"
+  with_items:
+    - "{{ apiserver_certs_path }}/{{ inventory_hostname }}/cert.pem"
+    - "{{ apiserver_certs_path }}/{{ inventory_hostname }}/key.pem"
+
+- name: upload etcd client certs 
+  notify: restart apiserver
+  copy:
+    src: "{{ item }}"
+    dest: "{{ apiserver_install_path }}/cert/etcd/"
+  with_items:
+    - "{{ etcd_client_certs_path }}/{{ inventory_hostname }}/cert.pem"
+    - "{{ etcd_client_certs_path }}/{{ inventory_hostname }}/key.pem"
+
+- name: upload kubelet client certs 
+  notify: restart apiserver
+  copy:
+    src: "{{ item }}"
+    dest: "{{ apiserver_install_path }}/cert/kubelet/"
+  with_items:
+    - "{{ kubelet_client_certs_path }}/{{ inventory_hostname }}/cert.pem"
+    - "{{ kubelet_client_certs_path }}/{{ inventory_hostname }}/key.pem"
+
+- name: upload config
+  notify: restart apiserver
+  template: 
+    src: supervisord.conf.j2
+    dest: "{{ apiserver_install_path }}/supervisord.conf"
+
+- name: upload scripts
+  copy:
+    src: "{{ item }}"
+    dest: "{{ apiserver_install_path }}/"
+    mode: u=rwx
+  with_items:
+    - start.sh
+    - stop.sh

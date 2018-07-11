@@ -1,0 +1,5 @@
+- name: restart controller
+  shell: "./stop.sh && sleep 1 && ./start.sh"
+  args:
+    chdir: "{{ controller_install_path }}"
+

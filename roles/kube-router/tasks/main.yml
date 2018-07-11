@@ -1,0 +1,55 @@
+- name: create directory
+  file:
+    path: "{{ kuberouter_install_path }}/{{ item }}"
+    state: directory
+  with_items:      
+    - 'bin'
+    - 'cert'
+    - 'data'
+    - 'log'
+
+- name: upload config
+  template:
+    src: supervisord.conf.j2
+    dest: "{{ kuberouter_install_path }}/supervisord.conf"
+
+- name: upload config
+  notify: restart kuberouter
+  template: 
+    src: kubeconfig.yml.j2
+    dest: "{{ kuberouter_install_path }}/kubeconfig.yml"
+
+- name: upload kuberouter
+  notify: restart kuberouter
+  copy: 
+    src: "{{ item }}"
+    dest: "{{ kuberouter_install_path }}/bin/"
+    mode: u=rwx
+  with_items:
+    - "{{ build_path }}/build-kube-router/kube-router/kube-router"
+
+- name: upload certs ca
+  notify: restart kuberouter
+  copy:
+    src: "{{ item }}"
+    dest: "{{ kuberouter_install_path }}/cert/ca/"
+  with_items:
+    - "{{ ca_path }}/ca.pem"
+
+- name: upload apiserver client certs 
+  notify: restart kuberouter
+  copy:
+    src: "{{ item }}"
+    dest: "{{ kuberouter_install_path }}/cert/apiserver-client/"
+  with_items:
+    - "{{ apiserver_client_certs_kube_router }}/{{ inventory_hostname }}/cert.pem"
+    - "{{ apiserver_client_certs_kube_router }}/{{ inventory_hostname }}/key.pem"
+
+- name: upload scripts
+  copy:
+    src: "{{ item }}"
+    dest: "{{ kuberouter_install_path }}/"
+    mode: u=rwx
+  with_items:
+    - start.sh
+    - stop.sh

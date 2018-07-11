@@ -1,0 +1,43 @@
+- name: create directory
+  file:
+    path: "{{ admin_install_path }}/{{ item }}"
+    state: directory
+  with_items:      
+    - 'bin'
+    - 'cert'
+
+- name: upload kubectl
+  copy: 
+    src: "{{ item }}"
+    dest: "{{ admin_install_path }}/bin/"
+    mode: u=rwx
+  with_items:
+    - "{{ build_path }}/build-kubernetes/kubernetes/_output/local/bin/linux/amd64/kubectl"
+
+- name: upload certs ca
+  copy:
+    src: "{{ item }}"
+    dest: "{{ admin_install_path }}/cert/ca/"
+  with_items:
+    - "{{ ca_path }}/ca.pem"
+
+- name: upload config
+  template: 
+    src: kubeconfig.yml.j2
+    dest: "{{ admin_install_path }}/kubeconfig.yml"
+
+- name: upload scripts
+  copy:
+    src: "{{ item }}"
+    dest: "{{ admin_install_path }}/"
+    mode: u=rwx
+  with_items:
+    - kubectl.sh
+
+- name: upload apiserver client certs 
+  copy:
+    src: "{{ item }}"
+    dest: "{{ admin_install_path }}/cert/apiserver-client/"
+  with_items:
+    - "{{ apiserver_client_certs_user }}/admin/cert.pem"
+    - "{{ apiserver_client_certs_user }}/admin/key.pem"

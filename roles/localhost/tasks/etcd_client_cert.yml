@@ -1,0 +1,51 @@
+- name: etcd client certs directory
+  tags: cert
+  file:
+    path: "{{ etcd_client_certs_path }}/{{ item }}"
+    state: directory
+  with_items:      
+    - "{{ groups['etcd_client'] }}"
+
+- name: etcd client key
+  tags: cert
+  openssl_privatekey:
+    path: "{{ etcd_client_certs_path }}/{{ item }}/key.pem"
+  with_items:      
+    - "{{ groups['etcd_client'] }}"
+
+- name: etcd client csr
+  tags: cert
+  openssl_csr:
+    path: "{{ etcd_client_certs_path }}/{{ item }}/cert.csr"
+    privatekey_path: "{{ etcd_client_certs_path }}/{{ item }}/key.pem"
+    common_name: "{{ item }}"
+    subject_alt_name: "IP:{{ item }}"
+  with_items:      
+    - "{{ groups['etcd_client'] }}"
+
+- name: etcd client req extensions  
+  template:
+    src: extention.conf.j2
+    dest: "{{ etcd_client_certs_path }}/{{ item }}/extention.conf"
+  with_items:      
+    - "{{ groups['etcd_client'] }}"
+
+# this task will always generate new certs to cover previous certs
+- name: etcd client cert
+  tags: cert
+  shell: if [ -f {{ etcd_client_certs_path }}/{{ item }}/cert.pem ];then exit; else openssl x509 -req -days 3650 -in {{ etcd_client_certs_path }}/{{ item }}/cert.csr -CA {{ ca_path }}/ca.pem  -CAkey {{ ca_path }}/key.pem -CAcreateserial -out {{ etcd_client_certs_path }}/{{ item }}/cert.pem -extensions v3_ca -extfile {{ etcd_client_certs_path }}/{{ item }}/extention.conf;fi
+  with_items:      
+    - "{{ groups['etcd_client'] }}"
+
+## cert.pem is empty file, i don't know why, so i use shell instead
+#- name: node cert
+#  tags: cert
+#  openssl_certificate:
+#    path: "{{ etcd_client_certs_path }}/{{ item }}/cert.pem"
+#    csr_path: "{{ etcd_client_certs_path }}/{{ item }}/cert.csr"
+#    privatekey_path: "{{ ca_path }}/key.pem"
+#    provider: acme
+#    acme_accountkey_path: "{{ etcd_client_certs_path }}/{{ item }}/key.pem"
+#    acme_challenge_path: "{{ etcd_client_certs_path }}/{{ item }}/challenge"
+#  with_items:      
+#    - "{{ groups['etcd'] }}"

@@ -1,0 +1,4 @@
+- name: restart etcd
+  shell: "./stop.sh && sleep 1 && ./start.sh"
+  args:
+    chdir: "{{ etcd_install_path }}"

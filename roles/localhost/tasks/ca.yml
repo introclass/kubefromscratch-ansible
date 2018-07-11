@@ -1,0 +1,32 @@
+- name: ca key
+  tags: ca
+  openssl_privatekey:
+    path: "{{ item }}/key.pem"
+  with_items:      
+    - "{{ ca_path }}"
+
+- name: ca csr
+  tags: ca
+  openssl_csr:
+    path: "{{ item }}/ca.csr"
+    privatekey_path: "{{ item }}/key.pem"
+    common_name: "ca"
+  with_items:      
+    - "{{ ca_path }}"
+
+# verify not pass, so user openssl command instead
+#- name: ca cert      
+#  tags: ca
+#  openssl_certificate:
+#    path: "{{ item }}/ca.pem"
+#    privatekey_path: "{{ item }}/key.pem"
+#    csr_path: "{{ item }}/ca.csr"
+#    provider: selfsigned
+#  with_items:      
+#    - "{{ ca_path }}"
+
+- name: ca cert      
+  tags: ca
+  shell: if [ -f  {{ item }}/ca.pem ];then exit; else openssl x509 -req -days 3650 -in {{ item }}/ca.csr -signkey {{ item }}/key.pem -out {{ item }}/ca.pem;fi
+  with_items:      
+    - "{{ ca_path }}"

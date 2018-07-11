@@ -1,0 +1,43 @@
+topdir: "{{ playbook_dir }}/output/staging"
+
+build_path: "{{ playbook_dir }}/output/build"
+log_path: "{{ topdir }}/log"
+
+certs_path: "{{ topdir }}/certs"
+
+ca_path: "{{ certs_path }}/ca"
+
+APISERVER: "https://{{ groups['apiserver'][0] }}"
+ETCD_CLUSTER_TOKEN: "12345678"
+etcd_certs_path: "{{ certs_path }}"
+etcd_client_certs_path: "{{ etcd_certs_path }}/etcd-client"
+etcd_server_certs_path: "{{ etcd_certs_path }}/etcd-server"
+etcd_peer_certs_path: "{{ etcd_certs_path }}/etcd-peer"
+
+serviceAccount_path: "{{ certs_path }}/serviceAccount"
+
+kubelet_certs_path: "{{ certs_path }}/kubelet"
+
+kubelet_client_certs_path: "{{ certs_path }}/kubelet-client"
+
+apiserver_certs_path: "{{ certs_path }}/apiserver"
+apiserver_client_certs_controller: "{{ certs_path }}/apiserver-client/controller"
+apiserver_client_certs_scheduler: "{{ certs_path }}/apiserver-client/scheduler"
+apiserver_client_certs_kubelet: "{{ certs_path }}/apiserver-client/kubelet"
+apiserver_client_certs_coredns: "{{ certs_path }}/apiserver-client/coredns"
+apiserver_client_certs_kube_router: "{{ certs_path }}/apiserver-client/kube-router"
+apiserver_client_certs_user: "{{ certs_path }}/apiserver-client/user"
+
+users:
+  admin:
+    name: "admin"
+    org: "system:masters"
+
+etcd_install_path: "/opt/app/etcd"
+apiserver_install_path: "/opt/app/apiserver"
+controller_install_path: "/opt/app/controller"
+scheduler_install_path: "/opt/app/scheduler"
+kubelet_install_path: "/opt/app/kubelet"
+cni_install_path: "/opt/app/cni"
+kuberouter_install_path: "/opt/app/kube-router"
+admin_install_path: "/opt/app/admin"
