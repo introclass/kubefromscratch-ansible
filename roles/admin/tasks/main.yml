@@ -26,6 +26,11 @@
     src: kubeconfig.yml.j2
     dest: "{{ admin_install_path }}/kubeconfig.yml"
 
+- name: upload config
+  template: 
+    src: kubeconfig-single.sh.j2
+    dest: "{{ admin_install_path }}/kubeconfig-single.sh"
+
 - name: upload scripts
   copy:
     src: "{{ item }}"

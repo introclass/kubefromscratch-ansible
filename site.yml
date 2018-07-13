@@ -11,5 +11,5 @@
   roles:
     - docker
     - cni
-    - kube-router
     - kubelet
+    - kube-router

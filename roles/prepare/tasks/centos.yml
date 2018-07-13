@@ -1,0 +1,40 @@
+- name: install pkgs
+  yum: 
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - yum-utils
+    - ipset
+    - iptables
+    - iproute
+    - ipvsadm
+    - supervisor
+
+#- name: add docker repo
+#  shell: "yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo"
+
+#
+#- name: ipset
+#  yum: 
+#    name: ipset
+#    state: present
+#
+#- name: iptables
+#  yum: 
+#    name: iptables
+#    state: present
+#
+#- name: iproute
+#  yum: 
+#    name: iproute
+#    state: present
+#
+#- name: ipvsadm
+#  yum: 
+#    name: ipvsadm
+#    state: present
+#
+#- name: supervisor
+#  yum: 
+#    name: supervisor
+#    state: present

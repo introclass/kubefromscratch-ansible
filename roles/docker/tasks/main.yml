@@ -1,12 +1,24 @@
-#- name: install docker-ce-selinux
+#- name: install docker-ce-18.03.1.ce
 #  notify: start docker
 #  yum: 
-#    name: https://download.docker.com/linux/centos/7/x86_64/stable/Packages/docker-ce-selinux-17.03.2.ce-1.el7.centos.noarch.rpm
+#    name: docker-ce-18.03.1.ce
 #    state: present
-#    validate_certs: no
-#- name: install dodcker-ce
-#  notify: start docker
-#  yum:
-#    name:  https://download.docker.com/linux/centos/7/x86_64/stable/Packages/docker-ce-17.03.2.ce-1.el7.centos.x86_64.rpm
-#    state: present
-#    validate_certs: no
+#    allow_downgrade: yes
+#
+
+- name: upload docker-ce-18.03.1.ce
+  copy:
+    src:  docker-ce-18.03.1.ce-1.el7.centos.x86_64.rpm
+    dest: "{{ rpms_path }}/"
+
+- name: install docker-ce-18.03.1.ce
+  notify: start docker
+  yum: 
+    name: "{{ rpms_path }}/docker-ce-18.03.1.ce-1.el7.centos.x86_64.rpm"
+    state: present
+
+- name: upload docker daemon.json 
+  notify: restart docker
+  template:
+    src:  daemon.json.j2
+    dest: "/etc/docker/daemon.json"

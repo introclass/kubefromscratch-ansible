@@ -1,0 +1,18 @@
+{
+  "kind": "Namespace",
+  "apiVersion": "v1",
+  "metadata": {
+    "name": "demo",
+    "generateName": "demo",
+    "labels":{
+        "name": "demo",
+        "purpose": "Demonstration"
+    },
+    "annotations": {
+        "describe": "Just show how to create"
+    }
+  },
+  "status": {
+    "phase": ""
+  }
+}

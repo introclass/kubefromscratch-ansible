@@ -7,3 +7,10 @@
 - name: install dependent packages
   import_tasks: centos.yml
   when: ansible_distribution == "CentOS"
+
+- name: create directory
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:      
+    - "{{ rpms_path }}"

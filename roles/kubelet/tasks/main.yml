@@ -1,3 +1,8 @@
+- name: start docker
+  service:
+     name: docker
+     state: started
+
 - name: create directory
   file:
     path: "{{ kubelet_install_path }}/{{ item }}"
@@ -9,19 +14,16 @@
     - 'log'
 
 - name: upload config
-  notify: restart kuberouter
   template: 
     src: supervisord.conf.j2
     dest: "{{ kubelet_install_path }}/supervisord.conf"
 
 - name: upload config
-  notify: restart kuberouter
   template: 
     src: kubeconfig.yml.j2
     dest: "{{ kubelet_install_path }}/kubeconfig.yml"
 
 - name: upload kubelet
-  notify: restart kuberouter
   copy: 
     src: "{{ item }}"
     dest: "{{ kubelet_install_path }}/bin/"
@@ -30,7 +32,6 @@
     - "{{ build_path }}/build-kubernetes/kubernetes/_output/local/bin/linux/amd64/kubelet"
 
 - name: upload certs ca
-  notify: restart kuberouter
   copy:
     src: "{{ item }}"
     dest: "{{ kubelet_install_path }}/cert/ca/"
@@ -38,7 +39,6 @@
     - "{{ ca_path }}/ca.pem"
 
 - name: upload kubelet certs 
-  notify: restart kuberouter
   copy:
     src: "{{ item }}"
     dest: "{{ kubelet_install_path }}/cert/kubelet/"
@@ -47,7 +47,6 @@
     - "{{ kubelet_certs_path }}/{{ inventory_hostname }}/key.pem"
 
 - name: upload apiserver client certs 
-  notify: restart kuberouter
   copy:
     src: "{{ item }}"
     dest: "{{ kubelet_install_path }}/cert/apiserver-client/"

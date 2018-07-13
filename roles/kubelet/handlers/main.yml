@@ -1,5 +1,9 @@
+- name: start docker
+  service:
+     name: docker
+     stated: started
+
 - name: restart kubelet
   shell: "./stop.sh && sleep 1 && ./start.sh"
   args:
     chdir: "{{ kubelet_install_path }}"
-

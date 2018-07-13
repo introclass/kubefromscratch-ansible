@@ -19,3 +19,11 @@
   template:
     src: 10-kuberouter.conf.j2
     dest: "{{ cni_install_path }}/conf/10-kuberouter.conf"
+    force: no
+
+- name: symbol link /etc/cni/net.d
+  file:
+    src: "{{ cni_install_path }}/conf"
+    dest: "/etc/cni/net.d"
+    state: link
+    force: yes

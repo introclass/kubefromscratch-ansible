@@ -1,0 +1,29 @@
+- hosts: etcd
+  tasks:
+    - name: destroy
+      file: 
+        path: "{{ etcd_install_path }}"
+        state: absent
+
+- hosts: master
+  tasks:
+    - name: destroy
+      file: 
+        path: "{{ item }}"
+        state: absent
+      with_items: 
+        - "{{ apiserver_install_path }}"
+        - "{{ controller_install_path }}"
+        - "{{ scheduler_install_path }}"
+        - "{{ admin_install_path }}"
+
+- hosts: master
+  tasks:
+    - name: destroy
+      file: 
+        path: "{{ item }}"
+        state: absent
+      with_items: 
+        - "{{ kubelet_install_path }}"
+        - "{{ kuberouter_install_path }}"
+        - "{{ cni_install_path }}"

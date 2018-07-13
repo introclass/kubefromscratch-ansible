@@ -1,0 +1,33 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+    name: webshell
+    labels:
+        app: webshell
+spec:
+    replicas: 3
+    selector:
+        matchLabels:
+            app: webshell
+    template:
+        metadata:
+            labels:
+                app: webshell
+        spec:
+            containers:
+            - name: webshell
+              image: lijiaocn/webshell:1.0
+              ports:
+              - containerPort: 80
+--
+kind: Service
+apiVersion: v1
+metadata:
+        name: webshell
+spec:
+        selector:
+                app: webshell
+        ports:
+        - protocol: TCP
+          port: 80
+          targetPort: 80   

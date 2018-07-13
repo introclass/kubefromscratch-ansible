@@ -1,4 +1,4 @@
-topdir: "{{ playbook_dir }}/output/staging"
+topdir: "{{ playbook_dir }}/output/production"
 
 build_path: "{{ playbook_dir }}/output/build"
 log_path: "{{ topdir }}/log"
@@ -33,6 +33,7 @@ users:
     name: "admin"
     org: "system:masters"
 
+rpms_path: "/opt/rpms"
 etcd_install_path: "/opt/app/k8s/etcd"
 apiserver_install_path: "/opt/app/k8s/apiserver"
 controller_install_path: "/opt/app/k8s/controller"
