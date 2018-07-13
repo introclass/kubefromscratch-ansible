@@ -3,7 +3,7 @@ layout: default
 title:  README
 author: lijiaocn
 createdate: 2018/03/15 21:23:00
-changedate: 2018/07/13 15:05:39
+changedate: 2018/07/13 17:09:21
 
 ---
 
@@ -18,7 +18,7 @@ changedate: 2018/07/13 15:05:39
 
 ### 安装依赖包
 
-后续的操作会用pip安装依赖的python包，一个创建python运行环境：
+后续的操作会用pip安装依赖的python包，创建独立的python运行环境：
 
 	virtualenv env
 	source env/bin/activate

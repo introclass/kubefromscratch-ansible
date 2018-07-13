@@ -67,6 +67,12 @@
     src: supervisord.conf.j2
     dest: "{{ apiserver_install_path }}/supervisord.conf"
 
+- name: upload token file
+  notify: restart apiserver
+  template: 
+    src: token.csv.j2
+    dest: "{{ apiserver_install_path }}/cert/token.csv"
+
 - name: upload scripts
   copy:
     src: "{{ item }}"

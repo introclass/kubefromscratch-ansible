@@ -24,6 +24,7 @@ supervisor.rpcinterface_factory = supervisor.rpcinterface:make_main_rpcinterface
 
 [program: kube-apiserver]
 command=./bin/kube-apiserver
+	--token-auth-file=./cert/token.csv
 	--bind-address=0.0.0.0
 	--service-cluster-ip-range=172.16.0.0/17
 	--log-dir=./log
