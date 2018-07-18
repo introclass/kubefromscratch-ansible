@@ -3,7 +3,7 @@ layout: default
 title:  README
 author: lijiaocn
 createdate: 2018/03/15 21:23:00
-changedate: 2018/07/18 11:09:43
+changedate: 2018/07/18 11:13:25
 
 ---
 
@@ -45,6 +45,8 @@ ssh登陆证书上传、依赖软件安装：
 	ansible all -u root -i inventories/staging/hosts -m command -a "pwd"
 
 ### 代码编译
+
+代码编译过程会比较慢：
 
 	ansible-playbook -i inventories/staging/hosts build.yml
 
