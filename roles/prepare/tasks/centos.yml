@@ -1,3 +1,10 @@
+- name: install epel
+  yum: 
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - epel-release
+
 - name: install pkgs
   yum: 
     name: "{{ item }}"
