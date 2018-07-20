@@ -3,7 +3,7 @@ layout: default
 title:  README
 author: lijiaocn
 createdate: 2018/03/15 21:23:00
-changedate: 2018/07/18 11:14:44
+changedate: 2018/07/19 13:56:55
 
 ---
 
@@ -46,7 +46,7 @@ ssh登陆证书上传、依赖软件安装：
 
 ### 代码编译
 
-代码编译过程会比较慢，本机器上需要安装有`docker`，并能拉取编译镜像：
+代码编译过程会比较慢，本机器上需要安装有`docker`、`git`，并能拉取编译镜像和github代码：
 
 	ansible-playbook -i inventories/staging/hosts build.yml
 
