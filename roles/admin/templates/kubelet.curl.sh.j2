@@ -1,0 +1,3 @@
+#!/bin/bash
+
+curl -k --cacert ./cert/ca/ca.pem  --key {{ apiserver_install_path }}/cert/kubelet/key.pem  --cert {{ apiserver_install_path }}/cert/kubelet/cert.pem $*

@@ -32,6 +32,15 @@
     dest: "{{ admin_install_path }}/kubeconfig-single.sh"
 
 - name: upload scripts
+  template: 
+    src: "{{ item }}.j2"
+    dest: "{{ admin_install_path }}/{{ item }}"
+    mode: u=rwx
+  with_items:
+    - apiserver.curl.sh
+    - kubelet.curl.sh
+
+- name: upload scripts
   copy:
     src: "{{ item }}"
     dest: "{{ admin_install_path }}/"

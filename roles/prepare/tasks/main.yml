@@ -14,3 +14,4 @@
     state: directory
   with_items:      
     - "{{ rpms_path }}"
+    - "/etc/cni"

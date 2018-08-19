@@ -33,6 +33,7 @@ users:
     name: "admin"
     org: "system:masters"
 
+rpms_path: "/opt/rpms"
 etcd_install_path: "/opt/app/k8s/etcd"
 apiserver_install_path: "/opt/app/k8s/apiserver"
 controller_install_path: "/opt/app/k8s/controller"

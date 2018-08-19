@@ -26,6 +26,10 @@
   tasks:
     - name: start docker
       shell: "systemctl start docker"
+    - name: start kube-router 
+      shell: "./start.sh"
+      args:
+        chdir: "{{ kuberouter_install_path }}"
     - name: start kubelet  
       shell: "./start.sh"
       args:
