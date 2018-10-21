@@ -145,3 +145,41 @@ ssh登陆证书上传、依赖软件安装：
 	    client-key-data: REDACTED
 
 然后可以尝试用[ https://kubernetic.com/ ](https://kubernetic.com/)管理Kubernetes集群。
+
+## 安装插件
+
+[kubernetes/cluster/addons](https://github.com/kubernetes/kubernetes/tree/master/cluster/addons)中一些可以在Kubernetes中安装的addons。
+
+	$ cd output/build/build-kubernetes/kubernetes/cluster/addons/
+	BUILD                     cluster-loadbalancing     dns-horizontal-autoscaler ip-masq-agent             node-problem-detector     registry
+	README.md                 cluster-monitoring        etcd-empty-dir-cleanup    kube-proxy                podsecuritypolicies       storage-class
+	addon-manager             dashboard                 fluentd-elasticsearch     metadata-proxy            python-image
+	calico-policy-controller  dns                       fluentd-gcp               metrics-server            rbac
+
+### 安装kube-dns
+
+下面演示的是1.8.0版本中的kube-dns的安装，更高版本的目录有所不同。
+
+先创建ServiceAccount和ConfigMap：
+
+	$ ./kubectl.sh create -f ~/kubefromscratch-ansible/output/build/build-kubernetes/kubernetes/cluster/addons/dns/kubedns-sa.yaml
+	$ ./kubectl.sh create -f ~/kubefromscratch-ansible/output/build/build-kubernetes/kubernetes/cluster/addons/dns/kubedns-cm.yaml
+
+然后生成`kubedns-controller.yaml`和`kubedns-svc.yaml`：
+
+	//mac上需要安装有gettext
+	brew install -y gettext
+	echo 'export PATH="/usr/local/opt/gettext/bin:$PATH"' >> ~/.zshrc  #或者~/.bash_profile
+	
+	export DNS_DOMAIN=cluster.local
+	export DNS_SERVER_IP=172.16.0.2
+	cat ~/kubefromscratch-ansible/..省略../addons/dns/kubedns-controller.yaml.sed |  envsubst >/tmp/kubedns-controller.yaml
+	cat ~/kubefromscratch-ansible/..省略...addons/dns/kubedns-svc.yaml.sed        |  envsubst >/tmp/kubedns-svc.yaml
+
+上面的`DNS_DOMAIN`、`DNS_SERVER_IP`分别与kubelet的`--cluster-domain`、`--cluster-dns`参数配置相同。
+
+分别创建：
+
+	./kubectl.sh create -f /tmp/kubedns-controller.yaml
+	./kubectl.sh create -f /tmp/kubedns-svc.yaml
+
