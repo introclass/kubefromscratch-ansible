@@ -16,6 +16,12 @@
     - iproute
     - ipvsadm
     - supervisor
+    - ntp  
+
+- name: start ntpd
+  service:
+     name: ntpd
+     state: started
 
 #- name: add docker repo
 #  shell: "yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo"

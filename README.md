@@ -72,6 +72,10 @@ ssh登陆证书上传、依赖软件安装：
 
 	ansible-playbook -u root -i inventories/staging/hosts site.yml
 
+### 本地部署管理员文件
+
+	ansible-playbook -u root -i inventories/staging/hosts cli.yml
+
 ### 管理操作
 
 启动集群:
