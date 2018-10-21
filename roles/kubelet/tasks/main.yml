@@ -14,16 +14,19 @@
     - 'log'
 
 - name: upload config
+  notify: restart kubelet
   template: 
     src: supervisord.conf.j2
     dest: "{{ kubelet_install_path }}/supervisord.conf"
 
 - name: upload config
+  notify: restart kubelet
   template: 
     src: kubeconfig.yml.j2
     dest: "{{ kubelet_install_path }}/kubeconfig.yml"
 
 - name: upload kubelet
+  notify: restart kubelet
   copy: 
     src: "{{ item }}"
     dest: "{{ kubelet_install_path }}/bin/"
@@ -32,6 +35,7 @@
     - "{{ build_path }}/build-kubernetes/kubernetes/_output/local/bin/linux/amd64/kubelet"
 
 - name: upload certs ca
+  notify: restart kubelet
   copy:
     src: "{{ item }}"
     dest: "{{ kubelet_install_path }}/cert/ca/"
@@ -39,6 +43,7 @@
     - "{{ ca_path }}/ca.pem"
 
 - name: upload kubelet certs 
+  notify: restart kubelet
   copy:
     src: "{{ item }}"
     dest: "{{ kubelet_install_path }}/cert/kubelet/"
@@ -47,6 +52,7 @@
     - "{{ kubelet_certs_path }}/{{ inventory_hostname }}/key.pem"
 
 - name: upload apiserver client certs 
+  notify: restart kubelet
   copy:
     src: "{{ item }}"
     dest: "{{ kubelet_install_path }}/cert/apiserver-client/"

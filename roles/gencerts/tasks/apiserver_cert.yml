@@ -24,7 +24,7 @@
 
 - name: apiserver req extensions  
   template:
-    src: extention.conf.j2
+    src: apiserver_extention.conf.j2
     dest: "{{ apiserver_certs_path }}/{{ item }}/extention.conf"
   with_items:      
     - "{{ groups['apiserver'] }}"

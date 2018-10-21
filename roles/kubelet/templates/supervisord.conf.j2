@@ -40,8 +40,8 @@ command=./bin/kubelet
 	--fail-swap-on=false
 	--pod-infra-container-image=googlecontainer/pause-amd64:3.0
 	--kubelet-cgroups=/kubelet
-	--cluster-domain=cluster.local
-#	--cluster-dns={DNSSERVER}
+	--cluster-domain={{ CLUSTER_DOMAIN }}
+	--cluster-dns={{ CLUSTER_DNS }}
 
 numprocs=1
 autostart=true
