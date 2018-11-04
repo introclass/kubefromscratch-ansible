@@ -22,37 +22,5 @@ nocleanup=true
 [rpcinterface:supervisor]
 supervisor.rpcinterface_factory = supervisor.rpcinterface:make_main_rpcinterface
 
-[program: kubelet]
-command=./bin/kubelet
-	--address=0.0.0.0
-	--port=10250
-	--tls-cert-file=./cert/kubelet/cert.pem
-	--tls-private-key-file=./cert/kubelet/key.pem
-	--hostname-override={{ inventory_hostname }}
-	--node-ip={{ inventory_hostname }}
-	--log-dir=./log
-	--network-plugin=cni
-	--cni-bin-dir={{ cni_install_path }}/bin
-	--cni-conf-dir={{ cni_install_path }}/conf
-	--v=1
-	--client-ca-file=./cert/ca/ca.pem
-	--kubeconfig=./kubeconfig.yml
-	--fail-swap-on=false
-	--pod-infra-container-image=googlecontainer/pause-amd64:3.0
-	--kubelet-cgroups=/kubelet
-	--cluster-domain={{ CLUSTER_DOMAIN }}
-	--cluster-dns={{ CLUSTER_DNS }}
-
-numprocs=1
-autostart=true
-startretries=3
-autorestart=unexpected
-exitcodes=0,2
-
-stdout_logfile=./log/kubelet-{{ inventory_hostname }}.stdout
-stdout_logfile_maxbytes=50MB
-stdout_logfile_backups=10
-
-stderr_logfile=./log/kubelet-{{ inventory_hostname }}.stderr
-stderr_logfile_maxbytes=50MB
-stderr_logfile_backups=10
+[include]
+files = ./*.ini

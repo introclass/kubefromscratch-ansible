@@ -14,10 +14,12 @@
     - 'log'
 
 - name: upload config
-  notify: restart kubelet
+  notify: reload supervisord
   template: 
-    src: supervisord.conf.j2
-    dest: "{{ kubelet_install_path }}/supervisord.conf"
+    src: "{{ item }}.j2"
+    dest: "{{ kubelet_install_path }}/{{ item }}"
+  with_items:      
+    - "kubelet.ini"
 
 - name: upload config
   notify: restart kubelet
@@ -69,3 +71,12 @@
   with_items:
     - start.sh
     - stop.sh
+
+- name: create link
+  notify: reload supervisord
+  file:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+    state: link
+  with_items:
+    - { src: "{{ kubelet_install_path }}/kubelet.ini", dest: "/etc/supervisord.d/kubelet.ini" }

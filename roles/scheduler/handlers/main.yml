@@ -1,5 +1,4 @@
+- name: reload supervisord
+  shell: "supervisorctl reload"
 - name: restart scheduler
-  shell: "./stop.sh && sleep 1 && ./start.sh"
-  args:
-    chdir: "{{ scheduler_install_path }}"
-
+  shell: "supervisorctl restart kube-scheduler"

@@ -9,10 +9,12 @@
     - 'log'
 
 - name: upload config
-  notify: restart controller
+  notify: reload supervisord
   template: 
-    src: supervisord.conf.j2
-    dest: "{{ controller_install_path }}/supervisord.conf"
+    src: "{{ item }}.j2"
+    dest: "{{ controller_install_path }}/{{ item }}"
+  with_items:      
+    - "controller.ini"
 
 - name: upload config
   notify: restart controller
@@ -63,3 +65,12 @@
   with_items:
     - start.sh
     - stop.sh
+
+- name: create link
+  notify: reload supervisord
+  file:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+    state: link
+  with_items:
+    - { src: "{{ controller_install_path }}/controller.ini", dest: "/etc/supervisord.d/controller.ini" }

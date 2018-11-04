@@ -54,10 +54,12 @@
     - "{{ etcd_peer_certs_path }}/{{ inventory_hostname }}/key.pem"
 
 - name: upload config
-  notify: restart etcd
+  notify: reload supervisord
   template: 
-    src: supervisord.conf.j2
-    dest: "{{ etcd_install_path }}/supervisord.conf"
+    src: "{{ item }}.j2"
+    dest: "{{ etcd_install_path }}/{{ item }}"
+  with_items:      
+    - "etcd.ini"
 
 - name: upload scripts
   copy:
@@ -69,3 +71,12 @@
     - etcdctl3.sh
     - start.sh
     - stop.sh
+
+- name: create link
+  notify: reload supervisord
+  file:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+    state: link
+  with_items:
+    - { src: "{{ etcd_install_path }}/etcd.ini", dest: "/etc/supervisord.d/etcd.ini" }
