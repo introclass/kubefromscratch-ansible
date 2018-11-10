@@ -1,0 +1,38 @@
+[program: kube-apiserver]
+command={{ apiserver_install_path }}/bin/kube-apiserver
+	--token-auth-file={{ apiserver_install_path }}/cert/token.csv
+	--bind-address=0.0.0.0
+	--service-cluster-ip-range={{ SERVICE_CLUSTER_IP_RANGE }}
+	--log-dir={{ apiserver_install_path }}/log
+	--v=1
+	--etcd-prefix=/kubernetes
+	--etcd-servers=https://{{ groups['etcd'] | zip_longest([], fillvalue=':2379')| map('join') | join(',https://') }}
+	--etcd-cafile={{ apiserver_install_path }}/cert/ca/ca.pem
+	--etcd-certfile={{ apiserver_install_path }}/cert/etcd/cert.pem
+	--etcd-keyfile={{ apiserver_install_path }}/cert/etcd/key.pem
+	--tls-cert-file={{ apiserver_install_path }}/cert/apiserver/cert.pem
+	--tls-private-key-file={{ apiserver_install_path }}/cert/apiserver/key.pem
+	--kubelet-https=true
+	--kubelet-certificate-authority={{ apiserver_install_path }}/cert/ca/ca.pem
+	--kubelet-client-certificate={{ apiserver_install_path }}/cert/kubelet/cert.pem
+	--kubelet-client-key={{ apiserver_install_path }}/cert/kubelet/key.pem
+	--client-ca-file={{ apiserver_install_path }}/cert/ca/ca.pem
+	--secure-port=443
+	--service-account-key-file={{ apiserver_install_path }}/cert/service_account/ca.pem
+	--authorization-mode=RBAC
+	--admission-control=NamespaceLifecycle,NamespaceExists,LimitRanger,SecurityContextDeny,ServiceAccount,ResourceQuota
+#	--runtime-config=/api=true,api/all=true,apis=true,apis/v1=true
+
+numprocs=1
+autostart=true
+startretries=3
+autorestart=unexpected
+exitcodes=0,2
+
+stdout_logfile={{ apiserver_install_path }}/log/apiserver-{{ inventory_hostname }}.stdout
+stdout_logfile_maxbytes=50MB
+stdout_logfile_backups=10
+
+stderr_logfile={{ apiserver_install_path }}/log/apiserver-{{ inventory_hostname }}.stderr
+stderr_logfile_maxbytes=50MB
+stderr_logfile_backups=10

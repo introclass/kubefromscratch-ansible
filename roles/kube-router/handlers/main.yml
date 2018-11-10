@@ -1,5 +1,4 @@
+- name: reload supervisord
+  shell: "supervisorctl reload"
 - name: restart kuberouter
-  shell: "./stop.sh && sleep 1 && ./start.sh"
-  args:
-    chdir: "{{ kuberouter_install_path }}"
-
+  shell: "supervisorctl restart kube-router"

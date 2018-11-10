@@ -22,36 +22,5 @@ nocleanup=true
 [rpcinterface:supervisor]
 supervisor.rpcinterface_factory = supervisor.rpcinterface:make_main_rpcinterface
 
-[program: etcd]
-command=./bin/etcd
-        --client-cert-auth=true
-        --peer-client-cert-auth=true
-        --trusted-ca-file=./cert/ca/ca.pem
-        --cert-file=./cert/server/cert.pem
-        --key-file=./cert/server/key.pem
-        --peer-ca-file=./cert/ca/ca.pem
-        --peer-cert-file=./cert/peer/cert.pem
-        --peer-key-file=./cert/peer/key.pem
-        --data-dir=./data/
-        --wal-dir=./backup/
-        --name={{ inventory_hostname }}
-        --listen-peer-urls=https://0.0.0.0:2380
-        --listen-client-urls=https://0.0.0.0:2379
-        --advertise-client-urls=https://{{ inventory_hostname }}:2379
-        --initial-advertise-peer-urls=https://{{ inventory_hostname }}:2380
-        --initial-cluster-token={{ ETCD_CLUSTER_TOKEN }}
-        --initial-cluster-state=new
-        --initial-cluster={% for i in groups['etcd'] %}{{ i }}=https://{{ i }}:2380,{%- endfor  %}
-
-numprocs=1
-autostart=true
-startretries=3
-autorestart=unexpected
-exitcodes=0,2
-stdout_logfile=./log/etcd-{{ inventory_hostname }}.stdout
-stdout_logfile_maxbytes=50MB
-stdout_logfile_backups=10
-
-stderr_logfile=./log/etcd-{{ inventory_hostname }}.stderr
-stderr_logfile_maxbytes=50MB
-stderr_logfile_backups=10
+[include]
+files = ./*.ini

@@ -1,3 +1,15 @@
+- hosts: all
+  become: true
+  become_user: root
+  tasks:
+    - name: start basic service
+      service:
+         enabled: yes
+         name: "{{ item }}"
+         state: started
+      with_items:
+        - supervisord
+
 - hosts: etcd
   roles:
     - etcd

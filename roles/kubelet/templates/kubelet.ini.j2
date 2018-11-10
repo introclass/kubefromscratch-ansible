@@ -1,0 +1,34 @@
+[program: kubelet]
+command={{ kubelet_install_path }}/bin/kubelet
+	--address=0.0.0.0
+	--port=10250
+	--tls-cert-file={{ kubelet_install_path }}/cert/kubelet/cert.pem
+	--tls-private-key-file={{ kubelet_install_path }}/cert/kubelet/key.pem
+	--hostname-override={{ inventory_hostname }}
+	--node-ip={{ inventory_hostname }}
+	--log-dir={{ kubelet_install_path }}/log
+	--network-plugin=cni
+	--cni-bin-dir={{ cni_install_path }}/bin
+	--cni-conf-dir={{ cni_install_path }}/conf
+	--v=1
+	--client-ca-file={{ kubelet_install_path }}/cert/ca/ca.pem
+	--kubeconfig={{ kubelet_install_path }}/kubeconfig.yml
+	--fail-swap-on=false
+	--pod-infra-container-image=googlecontainer/pause-amd64:3.0
+	--kubelet-cgroups=/kubelet
+	--cluster-domain={{ CLUSTER_DOMAIN }}
+	--cluster-dns={{ CLUSTER_DNS }}
+
+numprocs=1
+autostart=true
+startretries=3
+autorestart=unexpected
+exitcodes=0,2
+
+stdout_logfile={{ kubelet_install_path }}/log/kubelet-{{ inventory_hostname }}.stdout
+stdout_logfile_maxbytes=50MB
+stdout_logfile_backups=10
+
+stderr_logfile={{ kubelet_install_path }}/log/kubelet-{{ inventory_hostname }}.stderr
+stderr_logfile_maxbytes=50MB
+stderr_logfile_backups=10

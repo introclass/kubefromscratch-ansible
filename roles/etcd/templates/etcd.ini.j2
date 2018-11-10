@@ -1,0 +1,33 @@
+[program: etcd]
+command={{ etcd_install_path }}/bin/etcd
+        --client-cert-auth=true
+        --peer-client-cert-auth=true
+        --trusted-ca-file={{ etcd_install_path }}/cert/ca/ca.pem
+        --cert-file={{ etcd_install_path }}/cert/server/cert.pem
+        --key-file={{ etcd_install_path }}/cert/server/key.pem
+        --peer-ca-file={{ etcd_install_path }}/cert/ca/ca.pem
+        --peer-cert-file={{ etcd_install_path }}/cert/peer/cert.pem
+        --peer-key-file={{ etcd_install_path }}/cert/peer/key.pem
+        --data-dir={{ etcd_install_path }}/data/
+        --wal-dir={{ etcd_install_path }}/backup/
+        --name={{ inventory_hostname }}
+        --listen-peer-urls=https://0.0.0.0:2380
+        --listen-client-urls=https://0.0.0.0:2379
+        --advertise-client-urls=https://{{ inventory_hostname }}:2379
+        --initial-advertise-peer-urls=https://{{ inventory_hostname }}:2380
+        --initial-cluster-token={{ ETCD_CLUSTER_TOKEN }}
+        --initial-cluster-state=new
+        --initial-cluster={% for i in groups['etcd'] %}{{ i }}=https://{{ i }}:2380,{%- endfor  %}
+
+numprocs=1
+autostart=true
+startretries=3
+autorestart=unexpected
+exitcodes=0,2
+stdout_logfile={{ etcd_install_path }}/log/etcd-{{ inventory_hostname }}.stdout
+stdout_logfile_maxbytes=50MB
+stdout_logfile_backups=10
+
+stderr_logfile={{ etcd_install_path }}/log/etcd-{{ inventory_hostname }}.stderr
+stderr_logfile_maxbytes=50MB
+stderr_logfile_backups=10

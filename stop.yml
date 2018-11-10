@@ -1,28 +1,33 @@
 - hosts: etcd
+  gather_facts: no
   tasks:
     - name: stop
       shell: "./stop.sh"
       args:
         chdir: "{{ etcd_install_path }}"
 - hosts: apiserver
+  gather_facts: no
   tasks:
     - name: stop
       shell: "./stop.sh"
       args:
         chdir: "{{ apiserver_install_path }}"
 - hosts: controller
+  gather_facts: no
   tasks:
     - name: stop
       shell: "./stop.sh"
       args:
         chdir: "{{ controller_install_path }}"
 - hosts: scheduler
+  gather_facts: no
   tasks:
     - name: stop
       shell: "./stop.sh"
       args:
         chdir: "{{ scheduler_install_path }}"
 - hosts: node
+  gather_facts: no
   tasks:
     - name: stop docker
       shell: "systemctl stop docker"

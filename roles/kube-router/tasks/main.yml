@@ -9,9 +9,12 @@
     - 'log'
 
 - name: upload config
+  notify: reload supervisord
   template:
-    src: supervisord.conf.j2
-    dest: "{{ kuberouter_install_path }}/supervisord.conf"
+    src: "{{ item }}.j2"
+    dest: "{{ kuberouter_install_path }}/{{ item }}"
+  with_items:      
+    - "kube-router.ini"
 
 - name: upload config
   notify: restart kuberouter
@@ -53,3 +56,12 @@
   with_items:
     - start.sh
     - stop.sh
+
+- name: create link
+  notify: reload supervisord
+  file:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+    state: link
+  with_items:
+    - { src: "{{ kuberouter_install_path }}/kube-router.ini", dest: "/etc/supervisord.d/kube-router.ini" }

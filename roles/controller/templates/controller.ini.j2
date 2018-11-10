@@ -1,0 +1,27 @@
+[program: kube-controller-manager]
+command={{ controller_install_path }}/bin/kube-controller-manager
+    --address=0.0.0.0
+    --allocate-node-cidrs=true
+    --use-service-account-credentials=true
+    --cluster-cidr={{ CLUSTER_CIDR }}
+    --cluster-name=kubernetes
+    --log-dir={{ controller_install_path }}/log
+    --port=10252
+    --v=1
+    --root-ca-file={{ controller_install_path }}/cert/ca/ca.pem
+    --service-account-private-key-file={{ controller_install_path }}/cert/service_account/key.pem
+    --kubeconfig={{ controller_install_path }}/kubeconfig.yml
+
+numprocs=1
+autostart=true
+startretries=3
+autorestart=unexpected
+exitcodes=0,2
+
+stdout_logfile={{ controller_install_path }}/log/controller-{{ inventory_hostname }}.stdout
+stdout_logfile_maxbytes=50MB
+stdout_logfile_backups=10
+
+stderr_logfile={{ controller_install_path }}/log/controller-{{ inventory_hostname }}.stderr
+stderr_logfile_maxbytes=50MB
+stderr_logfile_backups=10
