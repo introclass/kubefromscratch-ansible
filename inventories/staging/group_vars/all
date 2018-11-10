@@ -8,6 +8,13 @@ certs_path: "{{ topdir }}/certs"
 ca_path: "{{ certs_path }}/ca"
 
 APISERVER: "https://{{ groups['apiserver'][0] }}"
+APISERVER_INCLUSTER_IP: "172.16.0.1"
+CLUSTER_DOMAIN: "cluster.local"
+CLUSTER_DNS: "172.16.0.2"
+
+SERVICE_CLUSTER_IP_RANGE: "172.16.0.0/17"
+CLUSTER_CIDR: "172.16.128.0/17"
+
 ETCD_CLUSTER_TOKEN: "12345678"
 etcd_certs_path: "{{ certs_path }}"
 etcd_client_certs_path: "{{ etcd_certs_path }}/etcd-client"
