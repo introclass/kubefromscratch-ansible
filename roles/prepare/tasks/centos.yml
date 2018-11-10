@@ -1,3 +1,6 @@
+- name: set local
+  shell: localedef -i zh_CN  -f UTF-8 zh_CN.UTF-8
+
 - name: install epel
   yum: 
     name: "{{ item }}"
