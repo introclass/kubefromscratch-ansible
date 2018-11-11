@@ -26,10 +26,13 @@
     src: kubeconfig.yml.j2
     dest: "{{ admin_install_path }}/kubeconfig.yml"
 
-- name: upload config
-  template: 
-    src: kubeconfig-single.sh.j2
-    dest: "{{ admin_install_path }}/kubeconfig-single.sh"
+- name: upload scripts
+  copy: 
+    src: "{{ item }}"
+    dest: "{{ admin_install_path }}/{{ item }}"
+    mode: u=rwx
+  with_items:
+    - kubectl.sh
 
 - name: upload scripts
   template: 
@@ -39,14 +42,7 @@
   with_items:
     - apiserver.curl.sh
     - kubelet.curl.sh
-
-- name: upload scripts
-  copy:
-    src: "{{ item }}"
-    dest: "{{ admin_install_path }}/"
-    mode: u=rwx
-  with_items:
-    - kubectl.sh
+    - kubeconfig-single.sh
 
 - name: upload apiserver client certs 
   copy:
