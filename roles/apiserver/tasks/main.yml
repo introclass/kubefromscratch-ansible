@@ -62,7 +62,7 @@
     - "{{ kubelet_client_certs_path }}/{{ inventory_hostname }}/key.pem"
 
 - name: upload config
-  notify: reload supervisord
+  notify: update supervisord
   template: 
     src: "{{ item }}.j2"
     dest: "{{ apiserver_install_path }}/{{ item }}"
@@ -85,7 +85,7 @@
     - stop.sh
 
 - name: create link
-  notify: reload supervisord
+  notify: update supervisord
   file:
     src: '{{ item.src }}'
     dest: '{{ item.dest }}'

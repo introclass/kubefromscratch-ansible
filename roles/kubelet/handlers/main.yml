@@ -2,8 +2,7 @@
   service:
      name: docker
      stated: started
-
-- name: reload supervisord
-  shell: "supervisorctl reload"
+- name: update supervisord
+  shell: "supervisorctl reread && supervisorctl update all"
 - name: restart kubelet
   shell: "supervisorctl restart kubelet"
