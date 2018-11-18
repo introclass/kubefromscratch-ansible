@@ -9,7 +9,18 @@ changedate: 2018/08/19 11:49:45
 
 ## 说明
 
-这套ansible脚本使用[kubefromscratch](https://github.com/introclass/kubefromscratch)项目master分支中选定的代码版本，并用其中的编译脚本完成kubernetes集群各个组件的编译。
+这是一套比较实用的Ansible部署脚本有视频讲解：[Kubernetes1.12从零开始学起](https://study.163.com/provider/400000000376006/course.htm?share=2&shareId=400000000376006)。
+
+[![video](http://www.lijiaocn.com/img/player.png)](https://study.163.com/course/introduction.htm?courseId=1005326005#/courseDetail?tab=1)
+
+可以关注：
+
+        微信公众号： “我的网课”，(关注后可以获得我微信)
+        QQ交流群： 947371129
+
+## 切换版本
+
+使用[kubefromscratch](https://github.com/introclass/kubefromscratch)项目master分支中选定的代码版本，并用其中的编译脚本完成kubernetes集群各个组件的编译。
 
 如果要更换版本，修改roles/build/tasks/main.yml文件中的version：
 
@@ -21,7 +32,7 @@ changedate: 2018/08/19 11:49:45
 	      version: master
 	      force: yes
 
-这套脚本适用的操作系统是CentOS 7。
+适用的操作系统是CentOS 7。
 
 ## 使用前准备
 
