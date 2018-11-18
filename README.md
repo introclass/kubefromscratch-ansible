@@ -18,6 +18,8 @@ changedate: 2018/08/19 11:49:45
         微信公众号： “我的网课”，(关注后可以获得我微信)
         QQ交流群： 947371129
 
+文档[Kubernetes1.12从零开始（六）：从代码编译到自动部署](https://www.lijiaocn.com/%E9%A1%B9%E7%9B%AE/2018/11/04/k8s-class-build-and-deploy-by-ansible.html)更详细一些，与视频同步。
+
 ## 切换版本
 
 使用[kubefromscratch](https://github.com/introclass/kubefromscratch)项目master分支中选定的代码版本，并用其中的编译脚本完成kubernetes集群各个组件的编译。
