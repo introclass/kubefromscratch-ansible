@@ -17,13 +17,13 @@
     - "kube-router.ini"
 
 - name: upload config
-  notify: restart kuberouter
+  notify: restart kube-router
   template: 
     src: kubeconfig.yml.j2
     dest: "{{ kuberouter_install_path }}/kubeconfig.yml"
 
 - name: upload kuberouter
-  notify: restart kuberouter
+  notify: restart kube-router
   copy: 
     src: "{{ item }}"
     dest: "{{ kuberouter_install_path }}/bin/"
@@ -32,7 +32,7 @@
     - "{{ build_path }}/build-kube-router/kube-router/kube-router"
 
 - name: upload certs ca
-  notify: restart kuberouter
+  notify: restart kube-router
   copy:
     src: "{{ item }}"
     dest: "{{ kuberouter_install_path }}/cert/ca/"
@@ -40,7 +40,7 @@
     - "{{ ca_path }}/ca.pem"
 
 - name: upload apiserver client certs 
-  notify: restart kuberouter
+  notify: restart kube-router
   copy:
     src: "{{ item }}"
     dest: "{{ kuberouter_install_path }}/cert/apiserver-client/"
