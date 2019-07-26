@@ -1,0 +1,4 @@
+- name: update supervisord
+  shell: "supervisorctl reread && supervisorctl update all"
+- name: restart kube-proxy
+  shell: "supervisorctl restart kube-proxy"

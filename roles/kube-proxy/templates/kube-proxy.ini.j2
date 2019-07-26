@@ -1,0 +1,19 @@
+[program: kube-proxy]
+command={{ kubeproxy_install_path }}/bin/kube-proxy
+	--kubeconfig={{ kubeproxy_install_path }}/kubeconfig.yml
+	--cluster-cidr={{ CLUSTER_CIDR }}
+	--hostname-override={{ inventory_hostname }}
+	--proxy-mode=ipvs
+numprocs=1
+autostart=true
+startretries=3
+autorestart=unexpected
+exitcodes=0,2
+
+stdout_logfile={{ kubeproxy_install_path }}/log/kubeproxy-{{ inventory_hostname }}.stdout
+stdout_logfile_maxbytes=50MB
+stdout_logfile_backups=10
+
+stderr_logfile={{ kubeproxy_install_path }}/log/kubeproxy-{{ inventory_hostname }}.stderr
+stderr_logfile_maxbytes=50MB
+stderr_logfile_backups=10
