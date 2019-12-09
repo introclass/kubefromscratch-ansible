@@ -1,0 +1,12 @@
+[Unit]
+Description=kong-proxy
+
+[Service]
+WorkingDirectory= {{ kong_proxy_install_path }}/
+ExecStart=/bin/openresty -p {{ kong_proxy_config_path }} -c nginx.conf
+Restart=on-failure
+ExecReload=/bin/kill -s SIGHUP $MAINPID
+LimitNOFILE=200000
+
+[Install]
+WantedBy=multi-user.target

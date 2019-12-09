@@ -1,4 +1,4 @@
-topdir: "{{ playbook_dir }}/output/staging"
+topdir: "{{ playbook_dir }}/output/demo"
 
 build_path: "{{ playbook_dir }}/output/build"
 log_path: "{{ topdir }}/log"
@@ -50,3 +50,18 @@ kubelet_install_path: "/opt/app/k8s/kubelet"
 cni_install_path: "/opt/app/k8s/cni"
 kuberouter_install_path: "/opt/app/k8s/kube-router"
 admin_install_path: "/opt/app/k8s/admin"
+
+#kong_proxy_code_path: "{{ build_path }}/kong-proxy/"
+kong_proxy_code_path: "/Users/lijiao/Work-Finup/apigateway/"
+
+kong_proxy_code_checkout: false
+kong_proxy_repo: "git://github.com/Kong/kong.git"
+kong_proxy_version: "0.14.1"
+
+kong_proxy_install_path: "/opt/app/kong-proxy"
+kong_proxy_config_path: "/usr/local/kong-proxy"
+kong_proxy_pg_host: 172.16.7.228
+kong_proxy_pg_port: 5432
+kong_proxy_pg_user: kong 
+kong_proxy_pg_password: kong
+kong_proxy_pg_database: kong

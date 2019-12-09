@@ -11,7 +11,7 @@ command={{ controller_install_path }}/bin/kube-controller-manager
     --root-ca-file={{ controller_install_path }}/cert/ca/ca.pem
     --service-account-private-key-file={{ controller_install_path }}/cert/service_account/key.pem
     --kubeconfig={{ controller_install_path }}/kubeconfig.yml
-    --leader-elect-resource-lock=configmaps
+#    --leader-elect-resource-lock=configmaps
 
 numprocs=1
 autostart=true

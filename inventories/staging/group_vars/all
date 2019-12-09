@@ -12,6 +12,7 @@ APISERVER_INCLUSTER_IP: "172.16.0.1"
 CLUSTER_DOMAIN: "cluster.local"
 CLUSTER_DNS: "172.16.0.2"
 
+
 SERVICE_CLUSTER_IP_RANGE: "172.16.0.0/17"
 CLUSTER_CIDR: "172.16.128.0/17"
 
@@ -33,6 +34,7 @@ apiserver_client_certs_scheduler: "{{ certs_path }}/apiserver-client/scheduler"
 apiserver_client_certs_kubelet: "{{ certs_path }}/apiserver-client/kubelet"
 apiserver_client_certs_coredns: "{{ certs_path }}/apiserver-client/coredns"
 apiserver_client_certs_kube_router: "{{ certs_path }}/apiserver-client/kube-router"
+apiserver_client_certs_kube_proxy: "{{ certs_path }}/apiserver-client/kube-proxy"
 apiserver_client_certs_user: "{{ certs_path }}/apiserver-client/user"
 
 users:
@@ -48,4 +50,21 @@ scheduler_install_path: "/opt/app/k8s/scheduler"
 kubelet_install_path: "/opt/app/k8s/kubelet"
 cni_install_path: "/opt/app/k8s/cni"
 kuberouter_install_path: "/opt/app/k8s/kube-router"
+kubeproxy_install_path: "/opt/app/k8s/kube-proxy"
 admin_install_path: "/opt/app/k8s/admin"
+
+#kong_proxy_code_path: "{{ build_path }}/kong-proxy/"
+kong_proxy_code_path: "/Users/lijiao/Work-Finup/apigateway/"
+#kong_proxy_code_path: "/Users/lijiao/Work-Finup/Bin/gopath/src/github.com/Kong/"
+
+kong_proxy_code_checkout: false
+kong_proxy_repo: "git://github.com/Kong/kong.git"
+kong_proxy_version: "0.14.1"
+
+kong_proxy_install_path: "/opt/app/kong-proxy"
+kong_proxy_config_path: "/usr/local/kong-proxy"
+kong_proxy_pg_host: 172.16.53.73
+kong_proxy_pg_port: 5432
+kong_proxy_pg_user: kong 
+kong_proxy_pg_password: kong
+kong_proxy_pg_database: kong
