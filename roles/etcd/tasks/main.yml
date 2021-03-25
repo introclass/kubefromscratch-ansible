@@ -69,6 +69,7 @@
   with_items:
     - etcdctl2.sh
     - etcdctl3.sh
+    - getkeys.sh
     - start.sh
     - stop.sh
 

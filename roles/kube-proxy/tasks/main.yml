@@ -1,0 +1,68 @@
+- name: create directory
+  file:
+    path: "{{ kubeproxy_install_path }}/{{ item }}"
+    state: directory
+  with_items:      
+    - 'bin'
+    - 'cert'
+    - 'data'
+    - 'log'
+
+- name: upload config
+  notify: update supervisord
+  template: 
+    src: "{{ item }}.j2"
+    dest: "{{ kubeproxy_install_path }}/{{ item }}"
+  with_items:      
+    - "kube-proxy.ini"
+
+- name: upload config
+  notify: restart kube-proxy
+  template: 
+    src: kubeconfig.yml.j2
+    dest: "{{ kubeproxy_install_path }}/kubeconfig.yml"
+
+- name: upload kubeproxy
+  notify: restart kube-proxy
+  copy: 
+    src: "{{ item }}"
+    dest: "{{ kubeproxy_install_path }}/bin/"
+    mode: u=rwx
+  with_items:
+    - "{{ build_path }}/build-kubernetes/kubernetes/_output/local/bin/linux/amd64/kube-proxy"
+
+- name: upload certs ca
+  notify: restart kube-proxy
+  copy:
+    src: "{{ item }}"
+    dest: "{{ kubeproxy_install_path }}/cert/ca/"
+  with_items:
+    - "{{ ca_path }}/ca.pem"
+
+- name: upload apiserver client certs 
+  notify: restart kube-proxy
+  copy:
+    src: "{{ item }}"
+    dest: "{{ kubeproxy_install_path }}/cert/apiserver-client/"
+  with_items:
+    - "{{ apiserver_client_certs_kube_proxy }}/{{ inventory_hostname }}/cert.pem"
+    - "{{ apiserver_client_certs_kube_proxy }}/{{ inventory_hostname }}/key.pem"
+
+- name: upload scripts
+  copy:
+    src: "{{ item }}"
+    dest: "{{ kubeproxy_install_path }}/"
+    mode: u=rwx
+  notify: restart kube-proxy
+  with_items:
+    - start.sh
+    - stop.sh
+
+- name: create link
+  notify: update supervisord
+  file:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+    state: link
+  with_items:
+    - { src: "{{ kubeproxy_install_path }}/kube-proxy.ini", dest: "/etc/supervisord.d/kube-proxy.ini" }

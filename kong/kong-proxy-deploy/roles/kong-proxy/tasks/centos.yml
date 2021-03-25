@@ -1,0 +1,20 @@
+- name: install pkgs
+  yum: 
+    name: ['yum-utils', 'git', 'luarocks', 'lua-devel', 'gcc', 'openssl-devel', 'libyaml-devel']
+    state: present
+
+- name: add openresty repo
+  shell: "yum-config-manager --add-repo https://openresty.org/package/centos/openresty.repo"
+
+- name: install openresty pkgs
+  yum: 
+    name: ['openresty', 'openresty-resty']
+    state: present
+
+# openresty自带的service文件不好使
+- name: disable openresty service 
+  systemd:
+    name: openresty
+    state: stopped
+    enabled: no
+    daemon_reload: yes

@@ -1,0 +1,54 @@
+- name: install dependent packages
+  import_tasks: centos.yml
+  when: ansible_distribution == "CentOS"
+
+- name: create directory
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:      
+    - "{{ kong_proxy_install_path }}"
+    - "{{ kong_proxy_config_path }}"
+
+- name: upload files
+  copy:
+    src: "{{ item }}"
+    dest: "{{ kong_proxy_install_path }}"
+  with_items:
+    - "resty.sh"
+    - "update.sh"
+
+- name: upload codes
+  unarchive: 
+    copy: yes
+    src:  "{{ kong_proxy_code_path }}/kong.gz"
+    dest: "{{ kong_proxy_install_path }}"
+
+- name: install kong
+  notify: reload kong-proxy
+  shell: |
+    cd {{ kong_proxy_install_path }}/kong
+    make install
+
+- name: upload config
+  notify: reload kong-proxy
+  template:
+    src: "{{ item.file }}.j2"
+    dest: "{{ item.dir }}/{{ item.file }}"
+  with_items:
+     - { file: "openresty", dir: "/etc/sysconfig" }
+     - { file: "kong.conf", dir: "{{ kong_proxy_install_path }}" }
+     - { file: "kong-proxy.service", dir: "/usr/lib/systemd/system" }
+
+- name: update kong config
+  notify: reload kong-proxy
+  shell: |
+     cd {{ kong_proxy_install_path }}
+     bash ./update.sh
+
+- name: start kong-proxy
+  systemd:
+    name: kong-proxy
+    state: started
+    enabled: yes
+    daemon_reload: yes

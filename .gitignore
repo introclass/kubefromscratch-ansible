@@ -4,3 +4,4 @@ env
 *.rpm
 *.tar.gz
 *.swp
+*.gz

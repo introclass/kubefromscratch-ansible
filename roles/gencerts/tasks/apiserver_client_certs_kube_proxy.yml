@@ -1,0 +1,39 @@
+- name: apiserver client kube-proxy certs directory
+  tags: cert
+  file:
+    path: "{{ apiserver_client_certs_kube_proxy }}/{{ item }}"
+    state: directory
+  with_items:      
+    - "{{ groups['kube-proxy'] }}"
+
+- name: apiserver client kube-proxy key
+  tags: cert
+  openssl_privatekey:
+    path: "{{ apiserver_client_certs_kube_proxy }}/{{ item }}/key.pem"
+  with_items:      
+    - "{{ groups['kube-proxy'] }}"
+
+- name: apiserver client kube-proxy csr
+  tags: cert
+  openssl_csr:
+    path: "{{ apiserver_client_certs_kube_proxy }}/{{ item }}/cert.csr"
+    privatekey_path: "{{ apiserver_client_certs_kube_proxy }}/{{ item }}/key.pem"
+    common_name: "{{ item }}"
+    organization_name: "system:masters"
+  with_items:      
+    - "{{ groups['kube-proxy'] }}"
+
+- name: apiserver req extensions  
+  template:
+    src: extention.conf.j2
+    dest: "{{ apiserver_client_certs_kube_proxy }}/{{ item }}/extention.conf"
+  with_items:      
+    - "{{ groups['kube-proxy'] }}"
+
+# this task will always generate new certs to cover previous certs
+- name: apiserver client kube-proxy cert
+  tags: cert
+  shell: if [ -f {{ apiserver_client_certs_kube_proxy }}/{{ item }}/cert.pem ];then exit; else openssl x509 -req -days 365 -in {{ apiserver_client_certs_kube_proxy }}/{{ item }}/cert.csr -CA {{ ca_path }}/ca.pem  -CAkey {{ ca_path }}/key.pem -CAcreateserial -out {{ apiserver_client_certs_kube_proxy }}/{{ item }}/cert.pem  -extensions v3_ca -extfile {{ apiserver_client_certs_kube_proxy }}/{{ item }}/extention.conf; fi
+
+  with_items:      
+    - "{{ groups['kube-proxy'] }}"

@@ -1,0 +1,26 @@
+[inet_http_server]
+port=127.0.0.1:9008
+username=supervisorctl
+password=supervisorctl
+environment=PATH="%(here)s:$PATH"
+
+[supervisorctl]
+serverurl=http://127.0.0.1:9008
+username=supervisorctl
+password=supervisorctl
+prompt=kubeproxy-{{ inventory_hostname }}
+
+[supervisord]
+logfile=%(here)s/log/supervisord.log
+logfile_maxbytes=50MB
+logfile_backups=10
+pidfile=/var/run/supervisor/kubeproxy-{{ inventory_hostname }}.pid
+loglevel=info
+nodaemon=false
+nocleanup=true
+
+[rpcinterface:supervisor]
+supervisor.rpcinterface_factory = supervisor.rpcinterface:make_main_rpcinterface
+
+[include]
+files = ./*.ini

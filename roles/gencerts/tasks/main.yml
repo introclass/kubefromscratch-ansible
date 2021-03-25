@@ -25,6 +25,7 @@
     - "{{ apiserver_client_certs_scheduler }}"
     - "{{ apiserver_client_certs_kubelet }}"
     - "{{ apiserver_client_certs_coredns }}"
+    - "{{ apiserver_client_certs_kube_proxy }}"
     - "{{ apiserver_client_certs_kube_router }}"
     - "{{ apiserver_client_certs_user }}"
     - "{{ kubelet_client_certs_path }}"
@@ -42,5 +43,6 @@
 - import_tasks: apiserver_client_certs_scheduler.yml
 - import_tasks: apiserver_client_certs_kubelet.yml
 - import_tasks: apiserver_client_certs_coredns.yml
+- import_tasks: apiserver_client_certs_kube_proxy.yml
 - import_tasks: apiserver_client_certs_kube_router.yml
 - import_tasks: apiserver_client_certs_user.yml

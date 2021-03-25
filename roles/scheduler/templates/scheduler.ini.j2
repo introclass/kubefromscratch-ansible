@@ -5,6 +5,7 @@ command={{ scheduler_install_path }}/bin/kube-scheduler
         --log-dir={{ scheduler_install_path }}/log
         --v=1
         --kubeconfig={{ scheduler_install_path }}/kubeconfig.yml
+        --leader-elect-resource-lock=configmaps
 
 numprocs=1
 autostart=true

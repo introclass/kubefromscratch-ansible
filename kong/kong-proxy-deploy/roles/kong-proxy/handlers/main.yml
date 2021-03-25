@@ -1,0 +1,6 @@
+- name: reload kong-proxy
+  systemd:
+    name: kong-proxy
+    state: reloaded
+    enabled: yes
+    daemon_reload: yes

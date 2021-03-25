@@ -20,7 +20,8 @@ command={{ apiserver_install_path }}/bin/kube-apiserver
 	--secure-port=443
 	--service-account-key-file={{ apiserver_install_path }}/cert/service_account/ca.pem
 	--authorization-mode=RBAC
-	--admission-control=NamespaceLifecycle,NamespaceExists,LimitRanger,SecurityContextDeny,ServiceAccount,ResourceQuota
+	--admission-control=NamespaceLifecycle,NamespaceExists,LimitRanger,ServiceAccount,ResourceQuota
+#	--admission-control=NamespaceLifecycle,NamespaceExists,LimitRanger,SecurityContextDeny,ServiceAccount,ResourceQuota
 #	--runtime-config=/api=true,api/all=true,apis=true,apis/v1=true
 
 numprocs=1

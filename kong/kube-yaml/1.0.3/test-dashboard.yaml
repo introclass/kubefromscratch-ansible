@@ -1,0 +1,40 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kong-dashboard
+  namespace: kong
+spec:
+  type: NodePort
+  ports:
+  - name: kong-dashboard
+    port: 80
+    targetPort: 8080
+    protocol: TCP
+  selector:
+    app: dashboard
+---
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: dashboard
+  namespace: kong
+spec:
+  template:
+    metadata:
+      labels:
+        name: dashboard
+        app: dashboard
+    spec:
+      containers:
+      - name: kong-dashboard
+        args:
+        - start
+        - --kong-url http://kong-ingress-controller:8001
+        - --basic-auth admin=admin
+        image: pgbi/kong-dashboard:latest
+        ports:
+        - name: http
+          containerPort: 8080
+          protocol: TCP

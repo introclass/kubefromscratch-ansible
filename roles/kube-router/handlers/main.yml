@@ -1,4 +1,4 @@
 - name: update supervisord
   shell: "supervisorctl reread && supervisorctl update all"
-- name: restart kuberouter
+- name: restart kube-router
   shell: "supervisorctl restart kube-router"

@@ -1,0 +1,13 @@
+topdir: "{{ playbook_dir }}/output/staging"
+build_path: "{{ playbook_dir }}/output/build"
+
+kong_proxy_code_path: "{{ build_path }}/kong-proxy/"
+kong_proxy_repo: "http://gitlab.puhuitech.cn/infrastructure/kong.git"
+kong_proxy_version: "dev"
+kong_proxy_install_path: "/opt/app/kong-proxy"
+kong_proxy_config_path: "/usr/local/kong-proxy"
+kong_proxy_pg_host: 172.19.132.240 
+kong_proxy_pg_port: 40003
+kong_proxy_pg_user: kong 
+kong_proxy_pg_password: kongkong
+kong_proxy_pg_database: kong
